@@ -623,6 +623,13 @@ void ofxComposer::addPatch(ofxPatch *p, ofPoint _position){
 
 //------------------------------------------------------------------
 bool ofxComposer::connect( int _fromID, int _toID, int nTexture, bool addInput_){
+    
+    if(formsLoop(_toID, _fromID)){
+        resetAlreadyVisited();
+        return false;
+    }
+    resetAlreadyVisited();
+    
     bool connected = false;
     
     if ((_fromID != -1) && (patches[_fromID] != NULL) &&
@@ -899,7 +906,8 @@ int ofxComposer::validateEncapsulation(vector<int> &patchesToEncapsulate){
         
         // validation ok
         if(patchId != -1) {
-            ConsoleLog::getInstance()->pushSuccess("Nodes encapsulated successfully. For a quick view click on the encapsulated node and press command key and 'e'.");
+            ConsoleLog::getInstance()->pushSuccess("Nodes encapsulated successfully.");
+            ConsoleLog::getInstance()->pushSuccess(" \t \t For a quick view click on the encapsulated node and press command key and 'e'.", false);
         }
     }else{
         ConsoleLog::getInstance()->pushError("There are not enough nodes selected to encapsulate");
@@ -1119,3 +1127,25 @@ bool ofxComposer::saveEncapsulatedSettingsToSnippet(ofxXmlSettings &XML, int enc
     return saved;
 }
 
+
+//------------------------------------------------------------------
+bool ofxComposer::formsLoop(int _originId, int _toId) {
+    patches[_originId]->alreadyVisited = true;
+    for(int i=0; i < patches[_originId]->outPut.size(); i++){
+        if(patches[_originId]->outPut.at(i).toId == _toId){
+            ConsoleLog::getInstance()->pushError("No loops allowed in connections");
+            return true;
+        } else {
+            if(!patches[patches[_originId]->outPut.at(i).toId]->alreadyVisited){
+                return formsLoop(patches[_originId]->outPut.at(i).toId, _toId);
+            }
+        }
+    }
+    return false;
+}
+
+void ofxComposer::resetAlreadyVisited(){
+    for(map<int,ofxPatch*>::iterator it = patches.begin(); it != patches.end(); it++ ){
+        it->second->alreadyVisited = false;
+    }
+}

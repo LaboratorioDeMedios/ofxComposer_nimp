@@ -151,6 +151,9 @@ private:
     
     // encapsulate
     int validateEncapsulation(vector<int> &patchesToEncapsulate);
+    
+    bool formsLoop(int _originId, int _toId);
+    void resetAlreadyVisited();
 };
 
 

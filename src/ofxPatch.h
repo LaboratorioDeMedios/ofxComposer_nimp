@@ -173,6 +173,8 @@ public:
     void            setLastEncapsulated(bool last);
     void            setToEncapsulatedId(int encapId);
     
+    bool alreadyVisited;
+    
 protected:
     
     // Mouse & Key Events ( it´s not better if is centralized on the composer )

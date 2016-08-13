@@ -61,6 +61,7 @@ ofxPatch::ofxPatch(){
     
     midiLearnActive     = false;
     editAudioInActive   = false;
+    alreadyVisited      = false;
     
     
     string shaderProgram = "#version 120\n\
