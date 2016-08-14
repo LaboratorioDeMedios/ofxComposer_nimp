@@ -909,7 +909,7 @@ void ofxPatch::_keyPressed(ofKeyEventArgs &e){
 //        return;
 //    }
     
-    if (EventHandler::getInstance()->getEncapsulatedIdDraw() != encapsulatedId){
+    if (EventHandler::getInstance()->getEncapsulatedIdDraw() != encapsulatedId && !lastEncapsulated){
         return;
     }
     
@@ -957,7 +957,7 @@ void ofxPatch::_keyPressed(ofKeyEventArgs &e){
             bInspector = !bInspector;
         }
         
-        // Show or hide Inspector
+        // deselect node
         //
         if (( e.key == 'd' || e.key == 'D' ) && !command_active){
             bActive = !bActive;
